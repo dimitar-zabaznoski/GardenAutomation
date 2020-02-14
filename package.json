@@ -1,0 +1,25 @@
+{
+  "name": "garden-automation",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "tsc": "tsc",
+    "start": "node ./bin/www"
+  },
+  "dependencies": {
+    "@types/node": "^13.5.1",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "dotenv": "^8.2.0",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "mongoose": "^5.8.7",
+    "morgan": "~1.9.1",
+    "pug": "^2.0.4",
+    "typescript": "^3.7.4"
+  },
+  "devDependencies": {
+    "@azhder/eslint-config-azder": "0.0.7",
+    "eslint": "^6.8.0"
+  }
+}

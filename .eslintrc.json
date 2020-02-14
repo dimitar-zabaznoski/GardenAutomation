@@ -1,0 +1,28 @@
+{
+    "parserOptions": {
+        "sourceType": "module",
+        "ecmaVersion": 2019,
+        "ecmaFeatures": {
+            "impliedStrict": true
+        }
+    },
+    "env": {
+        "browser": false,
+        "node": true,
+        "jest": false
+    },
+    "extends": "@azhder/azder",
+    "globals": {
+        "Promise": false,
+        "Symbol": false,
+        "Set": false
+    },
+    "rules": {
+        "new-cap": [
+            2,
+            {
+                "capIsNewExceptionPattern": "^[A-Z]$"
+            }
+        ]
+    }
+}
