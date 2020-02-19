@@ -1,9 +1,9 @@
 {
     "parserOptions": {
-        "sourceType": "module",
+        "sourceType": "script",
         "ecmaVersion": 2019,
         "ecmaFeatures": {
-            "impliedStrict": true
+            "impliedStrict": false
         }
     },
     "env": {
@@ -18,11 +18,5 @@
         "Set": false
     },
     "rules": {
-        "new-cap": [
-            2,
-            {
-                "capIsNewExceptionPattern": "^[A-Z]$"
-            }
-        ]
     }
 }
