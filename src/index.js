@@ -28,7 +28,7 @@ const server$ = require('./server.js');
 
 // run server with ENV parameters
 server$({
-    port:      ENV.port(DEFAULT.port, ENAME.port),
-    statics:   ENV.val('statics'),
-    routepath: ENV.val('routedir'),
+    port:     ENV.port(DEFAULT.port, ENAME.port),
+    statics:  ENV.val('statics'),
+    routedir: ENV.val('routedir'),
 });
