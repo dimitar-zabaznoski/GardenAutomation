@@ -13,12 +13,13 @@ const express = require('express');
 const morgan = require('morgan');
 const glob = require('glob');
 
-const DEFAULT = require('../src/etc/default.const.js');
+const DEFAULT = require('./etc/default.const.js');
 const {createRouter} = require('./util/express.util.js');
-const LOG = require('../src/util/log.util.js');
-const IS = require('../src/util/is.util.js');
-const XC = require('../src/etc/exit-code.enum.js');
+const LOG = require('./util/log.util.js');
+const IS = require('./util/is.util.js');
+const PROC = require('./util/process.util.js');
 
+const notFound$ = require('./mw/not-found.mw.js');
 const sender$ = require('./mw/sender.mw.js');
 
 const indexRouter = require('./route/index.manual-route.js');
@@ -33,7 +34,6 @@ module.exports = (
         routedir = DEFAULT.routedir,
     }) => {
 
-
         const server$ = express();
 
         if (statics) {
@@ -44,73 +44,62 @@ module.exports = (
         server$.use(express.json());
         // app.use(express.urlencoded({extended: false}));
 
-
-        // ATTACH ROUTES
+        // ATTACH ROUTES AND MIDDLEWARES
 
         glob.sync(`${routedir}/**/*.route.js`).forEach(fileName => {
 
             const fullPath = resolve(fileName);
 
-            // LOG.info(`exposing ${fileName}...`);
+            // LOG.info$(`exposing ${fileName}...`);
 
             server$.use('/v1', require(fullPath)(createRouter()));
 
         });
 
         server$.use('/', indexRouter(createRouter()));
-        // server$.use('/users', usersRouter);
-        // server$.use('/flowers', flowerRouter);
+        server$.use(notFound$);
+        server$.use(sender$);
+
 
         // EVENT LISTENERS
 
         /** Event listener for HTTP server "error" event */
-        const onError = (
-            error => {
+        server$.on('error', error => {
 
-                if ('listen' !== error.syscall) {
-                    throw error;
-                }
-
-                const bind = IS.string(port)
-                    ? `Pipe ${port}`
-                    : `Port ${port}`;
-
-                // handle specific listen errors with friendly messages
-                if ('EACCES' === error.code) {
-                    LOG.alert(`${bind} requires elevated privileges`);
-                    process.exit(XC.fail);
-                }
-
-                if ('EADDRINUSE' === error.code) {
-                    LOG.alert(`${bind} is already in use`);
-                    process.exit(XC.fail);
-                }
-
+            if ('listen' !== error.syscall) {
                 throw error;
-
             }
-        );
+
+            const bind = IS.string(port)
+                ? `Pipe ${port}`
+                : `Port ${port}`;
+
+            // handle specific listen errors with friendly messages
+            if ('EACCES' === error.code) {
+                return PROC.fail$(`${bind} requires elevated privileges`);
+            }
+
+            if ('EADDRINUSE' === error.code) {
+                return PROC.fail$(`${bind} is already in use`);
+            }
+
+            throw error;
+
+        });
 
         /** Event listener for HTTP server "listening" event */
-        const onListening = (
-            () => {
-                const addr = server$.address();
-                const bind = (
-                    IS.string(addr)
-                        ? `pipe ${addr}`
-                        : `port ${addr.port}`
-                );
-                LOG.info(`index.js: listening on ${bind}...`);
-            }
-        );
-
+        server$.on('listening', () => {
+            const addr = server$.address();
+            const bind = (
+                IS.string(addr)
+                    ? `pipe ${addr}`
+                    : `port ${addr.port}`
+            );
+            LOG.info$(`index.js: listening on ${bind}...`);
+        });
 
         // MAIN
 
-        server$.on('error', onError);
-        server$.on('listening', onListening);
-
-        server$.use(sender$);
         server$.listen(port);
 
         return server$;

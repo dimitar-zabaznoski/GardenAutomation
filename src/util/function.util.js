@@ -7,9 +7,18 @@ const tie = (
 );
 
 
+const reducer = (arg, fn) => fn(arg);
+
+const compose = (
+
+    (...fns) => arg => fns.reduceRight(reducer, arg)
+
+);
+
+
 module.exports = Object.freeze({
 
     tie,
-
+    compose,
 
 });

@@ -1,9 +1,17 @@
 'use strict'; // ALWAYS
 
+const DEFAULT = require('../etc/default.const.js');
+const ENAME = require('../etc/env-name.const.js');
+
+
 const get = (
 
     (defaultValue, name) => process.env[name] || defaultValue
 
+);
+
+const val = (
+    name => get(DEFAULT[name], ENAME[name])
 );
 
 
@@ -11,17 +19,15 @@ const port = (
 
     (defaultValue, name) => {
 
-        const val = process.env[name] || defaultValue;
-        const prt = parseInt(val, 10);
+        const string = process.env[name] || defaultValue;
+        const parsed = parseInt(string, 10);
 
-        if (isNaN(prt)) {
-            // named pipe
-            return val;
+        if (isNaN(parsed)) {
+            return string; // it is named pipe
         }
 
-        // port can only be positive
-        // but also has high limit, not checked here
-        return (0 <= prt ? prt : false);
+        // port is only positive, but has high limit, not checked here
+        return (0 <= parsed ? parsed : false);
 
     }
 
@@ -31,4 +37,5 @@ const port = (
 module.exports = Object.freeze({
     port,
     get,
+    val,
 });

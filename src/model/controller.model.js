@@ -1,8 +1,7 @@
 'use strict'; // ALWAYS
 
-
-const mongoose = require('mongoose');
-const {define} = require('../util/mongo.util.js');
+const {define, reference} = require('../util/mongo.util.js');
+const Flower = require('./flower.model.js');
 
 
 module.exports = define(
@@ -12,15 +11,15 @@ module.exports = define(
         model:        String,
         serialNumber: String,
         url:          String,
-        chanelType:   {
+
+        chanelType: {
             type:    String,
             enum:    ['wifi', 'bluetooth'],
             default: 'wifi',
         },
-        flowers:      [{
-            type: mongoose.Schema.Types.ObjectId,
-            ref:  'Flower',
-        }],
+
+        flowers: reference(Flower.NAME),
+
     }
 );
 

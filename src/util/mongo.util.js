@@ -1,18 +1,14 @@
 'use strict'; // ALWAYS
 
-const mongoose = require('mongoose');
-const {Schema} = mongoose;
-const {ObjectId} = Schema.Types;
+const {Schema, model} = require('mongoose');
+const MT = require('../etc/mongo-type.enum.js');
 
 
-/** @typedef {Model & {NAME:string,SCHEMA:Schema} } MongooseModel */
-
-/** @type {function(string,object,object=):MongooseModel} */
 const define = (
     (name, definition, options) => {
 
-        definition = {
-            _id:      ObjectId,
+        const d = {
+            _id:      MT.id,
             created:  Date,
             modified: Date,
             deleted:  Date,
@@ -20,13 +16,13 @@ const define = (
             ...definition,
         };
 
-        const schema = new Schema(definition, options);
-        const model = mongoose.model(name, schema);
+        const s = new Schema(d, options);
+        const m = model(name, s);
 
-        model.NAME = name;
-        model.SCHEMA = schema;
+        m.NAME = name;
+        m.SCHEMA = s;
 
-        return model;
+        return m;
 
     }
 );
@@ -34,7 +30,7 @@ const define = (
 
 const reference = (
 
-    name => ({type: ObjectId, ref: name})
+    name => ({type: MT.id, ref: name})
 
 );
 

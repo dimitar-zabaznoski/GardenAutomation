@@ -1,8 +1,10 @@
+'use strict'; // ALWAYS
+
+
 // see https://en.wikipedia.org/wiki/List_of_HTTP_status_codes
 
 
 module.exports = Object.freeze({
-
 
 
     // success

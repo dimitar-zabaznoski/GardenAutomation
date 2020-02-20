@@ -1,3 +1,6 @@
+'use strict'; // ALWAYS
+
+
 const EC = require('./error-code.enum.js');
 
 

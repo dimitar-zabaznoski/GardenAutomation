@@ -6,7 +6,7 @@ const WaterConsumption = require('../model/water-consumption.model.js');
 const IS = require('../util/is.util.js');
 
 const ALL_PATH = '/flowers';
-const ONE_PATH = `/flower/:id`;
+const ONE_PATH = '/flower/:id';
 
 const {wrapSync, wrapAsync} = require('../util/express.util.js');
 const R = require('../util/responder.util.js');

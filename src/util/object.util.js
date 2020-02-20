@@ -1,3 +1,6 @@
+'use strict'; // ALWAYS
+
+
 const freeze$ = Object.freeze;
 
 
