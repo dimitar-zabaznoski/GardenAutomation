@@ -8,15 +8,20 @@ const define = (
     (name, definition, options) => {
 
         const d = {
-            _id:      MT.id,
-            created:  Date,
-            modified: Date,
-            deleted:  Date,
-            archived: Date,
+            _id:        MT.id,
+            createdAt:  Date,
+            updatedAt:  Date,
+            deletedAt:  Date,
+            archivedAt: Date,
             ...definition,
         };
 
-        const s = new Schema(d, options);
+        const o = {
+            timestamps: true,
+            ...options,
+        };
+
+        const s = new Schema(d, o);
         const m = model(name, s);
 
         m.NAME = name;
@@ -35,7 +40,15 @@ const reference = (
 );
 
 
+const idOf = (
+
+    // eslint-disable-next-line no-underscore-dangle
+    document => document && (document._id || document.id)
+
+);
+
 module.exports = Object.freeze({
     define,
     reference,
+    idOf,
 });

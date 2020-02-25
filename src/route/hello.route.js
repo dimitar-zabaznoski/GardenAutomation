@@ -10,15 +10,10 @@ const PATH = '/hello';
 
 module.exports = (
 
-    router => router
-        .get(
-            PATH,
-            wrapSync(() => R.ok('display greeting', 'hello world'))
-        )
-        .post(
-            PATH,
-            wrapSync(() => R.notImplemented())
-        )
+    router => router.get(
+        PATH,
+        wrapSync(() => R.ok('display greeting', 'hello world'))
+    )
 
 );
 

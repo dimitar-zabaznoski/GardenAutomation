@@ -17,7 +17,7 @@ module.exports = (
         )
         .post(
             PATH,
-            wrapSync(() => R.notImplemented())
+            wrapSync(() => R.notImplemented('sorry #4'))
         )
 
 );

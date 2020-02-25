@@ -8,6 +8,13 @@ const nil = (
 );
 
 
+const there = (
+
+    value => null !== value && void 0 !== value
+
+);
+
+
 const string = (
     // eslint-disable-next-line prefer-template
     value => 'symbol' !== typeof value && ('' + value === value)
@@ -17,6 +24,7 @@ const string = (
 module.exports = Object.freeze({
 
     nil,
+    there,
     string,
 
 });

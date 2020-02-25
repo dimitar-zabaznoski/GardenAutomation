@@ -1,5 +1,7 @@
 'use strict'; // ALWAYS
 
+const DEFAULT = require('../etc/default.const.js');
+const {df} = require('./object.util.js');
 const {Router} = require('express');
 
 
@@ -26,13 +28,24 @@ const wrapAsync = (
 
     mw => (req, res, next) => (
 
-        mw(req, res, next)
-            .then(
-                body => res
-                    .status(body.hcode)
-                    .json(body)
-            )
-            .catch(next)
+        mw(req, res, next).then(
+            body => {
+
+                const {meta, hcode} = body;
+                const {ctype, location} = meta;
+
+                if (location) {
+                    res.location(location);
+                }
+
+                return (
+                    res
+                        .type(df(DEFAULT.ctype, ctype))
+                        .status(hcode)
+                        .json(body)
+                );
+            }
+        ).catch(next)
 
     )
 

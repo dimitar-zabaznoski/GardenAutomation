@@ -1,16 +1,18 @@
 'use strict'; // ALWAYS
 
-
 const FlowerRoute = require('../model/flower.model.js');
-const WaterConsumption = require('../model/water-consumption.model.js');
-const IS = require('../util/is.util.js');
 
-const ALL_PATH = '/flowers';
-const ONE_PATH = '/flower/:id';
+const createFlower$ = require('../service/create-flower.service.js');
 
 const {wrapSync, wrapAsync} = require('../util/express.util.js');
 const R = require('../util/responder.util.js');
-const {df} = require('../util/object.util.js');
+const {invalid} = require('../util/folktale.util.js');
+const {idOf} = require('../util/mongo.util.js');
+
+
+const ALL_PATH = '/flowers';
+const SEG_PATH = 'flower';
+const ONE_PATH = `/${SEG_PATH}/:id`;
 
 
 module.exports = (
@@ -34,32 +36,28 @@ module.exports = (
             ALL_PATH,
             wrapAsync(async req => {
 
-                // TODO: @azder: do some validation
-                // TODO: @azder: move this to BL layer
+                const {name, species, w_consumption_id: waterConsumptionId} = req.body;
+                const data = {name, species, waterConsumptionId};
 
-                const {name, species, w_consumption_id: wcId} = req.body;
+                const result = await createFlower$(data);
+                const {value} = result;
 
-                if (IS.nil(name) || IS.nil(species)) {
-                    return R.invalid('missing name or species', {name, species});
+                if (invalid(result)) {
+                    return R.invalid('invalid flower data', value);
                 }
 
-                const waterConsumption = await WaterConsumption.findById(wcId).exec();
-
-                const flower = new FlowerRoute({
-                    friendlyName:     name,
-                    speciesName:      species,
-                    waterConsumption: df({}, waterConsumption).asd0,
-                });
+                const id = idOf(value);
 
                 return R.created(
-                    null, // TODO: @azder: provide the URI for the new resource
+                    id ? `${req.baseUrl}/${SEG_PATH}/${id}` : null,
                     'created flower',
-                    await flower.save(), // be nice and return the new data
+                    value, // be nice and return the new data
                 );
+
             })
         )
-        .put(ONE_PATH, wrapSync(() => R.notImplemented()))
-        .delete(ONE_PATH, wrapSync(() => R.notImplemented()))
+        .put(ONE_PATH, wrapSync(() => R.notImplemented('sorry #2')))
+        .delete(ONE_PATH, wrapSync(() => R.notImplemented('sorry #3')))
 
 );
 

@@ -7,6 +7,18 @@ const {tie} = require('./function.util.js');
 const {freeze$} = require('./object.util.js');
 
 
+/**
+ * @typedef {{
+ *      ecode: string,
+ *      hcode: number,
+ *      xcode: number,
+ *      message: string,
+ *      meta: object,
+ *      data: *
+ *  }} ResponderResult
+ */
+
+
 const responder = (
 
     (
@@ -59,5 +71,6 @@ responder.server = tie(responder, EC.server);
 responder.notImplemented = tie(responder, EC.notImplemented);
 
 
+responder.espond = responder;
 freeze$(responder);
 module.exports = responder;

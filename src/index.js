@@ -22,9 +22,12 @@ if (env.error) {
 }
 
 // init db and server
-require('./db.js'); // TODO: @azder: make db return init function like server
+const db$ = require('./db.js');
 const server$ = require('./server.js');
 
+
+// connect to DB
+db$();
 
 // run server with ENV parameters
 server$({
