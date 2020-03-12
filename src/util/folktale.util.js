@@ -10,7 +10,7 @@ const {Ok: ok, Error: error} = Result;
 
 const invalid = (
 
-    result => Validation.Failure.hasInstance(result)
+    result => Validation.Failure.hasInstance(result) || Result.Error.hasInstance(result)
 
 );
 

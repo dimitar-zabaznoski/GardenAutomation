@@ -35,8 +35,8 @@ const createFlower$ = (
         }
 
         const {name, species, waterConsumptionId} = data;
-        const found = await waterConsumptionById({id: waterConsumptionId});
 
+        const found = await waterConsumptionById({id: waterConsumptionId});
         if (invalid(found)) {
             return info$('createFlower$()', 'bailing save b/c', found);
         }

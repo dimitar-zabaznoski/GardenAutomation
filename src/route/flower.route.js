@@ -37,9 +37,8 @@ module.exports = (
             wrapAsync(async req => {
 
                 const {name, species, w_consumption_id: waterConsumptionId} = req.body;
-                const data = {name, species, waterConsumptionId};
 
-                const result = await createFlower$(data);
+                const result = await createFlower$({name, species, waterConsumptionId});
                 const {value} = result;
 
                 if (invalid(result)) {
